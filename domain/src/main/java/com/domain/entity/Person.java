@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @Document(collection = "person")
 @Service
-public class Person {
+public class Person implements GeneralEntity {
 
     // public Person(String firstName, String lastName) {
     //     this.firstName = firstName;
@@ -26,6 +26,10 @@ public class Person {
     ObjectId id;
     String firstName;
     String lastName;
+
+    public void setId(ObjectId id){
+        this.id = id;
+    }
     
     // public String getFullName(){
     //     return this.getFirstName() + " " + this.getLastName();

@@ -1,15 +1,12 @@
 package com.app.controller;
 
-import com.domain.entity.Person;
 import org.apache.log4j.Logger;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.domain.repository.UserRepository;
 import com.domain.entity.User;
@@ -20,29 +17,28 @@ import com.domain.entity.User;
 @RequestMapping(path = "/api/users", produces = "application/json")
 public class UserController {
     private static final Logger logger = Logger.getLogger(UserController.class);
-    
-     @Autowired
-     private UserRepository userRepository;
-
-     GeneralController generalController;
-
-     private UserController() {
-
-         this.generalController = new GeneralController<User>(userRepository);
-     }
 
 
-     /*
-      * get all users
-      */
-     @GetMapping(path="")
-     public ResponseEntity<List<User>> getAllUsers() {
-         return generalController.getAll();
-         /*
-         List<User> users = userRepository.findAll();
-         return new ResponseEntity<>(users, HttpStatus.OK);
-         */
-     }
+    private UserRepository userRepository;
+
+    GeneralController generalController;
+
+    @Autowired
+    private UserController(UserRepository userRepository) {
+
+        this.userRepository = userRepository;
+        this.generalController = new GeneralController<User>(userRepository);
+    }
+
+
+    /*
+     * get all users
+     */
+    @GetMapping(path="")
+    public ResponseEntity<List<User>> getAllUsers() {
+
+        return generalController.getAll();
+    }
 
     /*
      * get user accroding to id
@@ -50,9 +46,7 @@ public class UserController {
     @GetMapping(path="/get/{id}")
     public ResponseEntity<User> getUserById(@PathVariable(required=true) String id){
 
-        Optional<User> result =  userRepository.findById(id);
-        return result.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        return generalController.getById(id);
     }
 
     /*
@@ -60,28 +54,21 @@ public class UserController {
      */
     @GetMapping(path="/get")
     public ResponseEntity<List<User>> getUsersByAttribute(
-        @RequestParam(required=false) String firstName,
-        @RequestParam(required=false) String lastName) {
+            @RequestParam(required=false) String firstName,
+            @RequestParam(required=false) String lastName) {
 
-        return new ResponseEntity<>(userRepository.findByFirstName("Amine"), HttpStatus.OK
-
-        );
-
-        /*
         List<User> users;
         if(firstName != null) {
-            logger.info("firstName");
+            logger.info("firstName: " + firstName);
             users = userRepository.findByFirstName(firstName);
-            logger.info(users);
         }
         else if (lastName != null) {
             logger.info("lastName");
             users = userRepository.findByLastName(lastName);
-            logger.info(users);
         }
         else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(users, HttpStatus.OK);*/
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 
@@ -91,13 +78,7 @@ public class UserController {
     @PostMapping(path="/add")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
 
-        try {
-            userRepository.save(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
+        return generalController.saveObject(user);
     }
 
     /*
@@ -105,20 +86,10 @@ public class UserController {
      */
     @PutMapping(path="/update/{id}", consumes="application/json")
     public ResponseEntity<User> updateUser(
-        @PathVariable(required=true) String id,
-        @RequestBody User newUser) {
-        
-        Optional<User> result = userRepository.findById(id);
+            @PathVariable(required=true) String id,
+            @RequestBody User user) {
 
-        if(!result.isPresent()) {
-           logger.info("user with id id " + id + "does not exist");
-           return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        newUser.setId(new ObjectId(id));
-        userRepository.save(newUser);
-
-        return new ResponseEntity<>(newUser, HttpStatus.ACCEPTED);
+        return generalController.updateObject(id, user);
     }
 
     /*
@@ -127,13 +98,7 @@ public class UserController {
     @DeleteMapping(path="/remove/{id}")
     public ResponseEntity<User> removeUser(@PathVariable(required=true) String id) {
 
-        Optional<User> result = userRepository.findById(id);
-        if(!result.isPresent()) {
-            logger.info("user with id id " + id + "does not exist");
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-        userRepository.delete(result.get());
-        return new ResponseEntity<>(result.get(), HttpStatus.ACCEPTED);
+        return generalController.removeObject(id);
     }
 
 }

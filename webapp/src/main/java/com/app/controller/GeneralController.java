@@ -1,6 +1,6 @@
 package com.app.controller;
 
-import com.domain.entity.User;
+import com.domain.entity.GeneralEntity;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -12,79 +12,45 @@ import java.util.Optional;
 
 
 
+// curl -X $m $a1$a2 -H $h -d $d
+class GeneralController<DomainClass> {
+    private static final Logger logger = Logger.getLogger(GeneralController.class);
 
-public class GeneralController<DomainClass> {
-    private static final Logger logger = Logger.getLogger(UserController.class);
-    // private final Class<?> domainClass;
+    private MongoRepository<DomainClass, ObjectId> domainRepository;
 
-    private MongoRepository<DomainClass, ObjectId> repo;
+    GeneralController(MongoRepository<DomainClass, ObjectId> domainRepository){
 
-    GeneralController(MongoRepository<DomainClass, ObjectId> repository){
-
-        this.repo = repository;
-        // this.domainClass = domainClass;
+        this.domainRepository = domainRepository;
     }
-
 
     /*
      * get all objects
      */
-    public ResponseEntity<List<DomainClass>> getAll() {
+    ResponseEntity<List<DomainClass>> getAll() {
 
-        List<DomainClass> objects = repo.findAll();
-        return new ResponseEntity<>(HttpStatus.OK);
+        List<DomainClass> objects = domainRepository.findAll();
+        return new ResponseEntity<>(objects, HttpStatus.OK);
     }
 
     /*
-     * get user accroding to id
-     *
-    @GetMapping(path="/get/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(required=true) String id){
+     * get object accroding to id
+     */
+    ResponseEntity<DomainClass> getById(String id){
 
-        Optional<User> result =  userRepository.findById(id);
-        return result.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+        Optional<DomainClass> result =  domainRepository.findById(new ObjectId(id));
+        return result.map(object -> new ResponseEntity<>(object, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
-    /*
-     * get all users according to firstName
-     *
-    @GetMapping(path="/get")
-    public ResponseEntity<List<User>> getUsersByAttribute(
-            @RequestParam(required=false) String firstName,
-            @RequestParam(required=false) String lastName) {
-
-        return new ResponseEntity<>(userRepository.findByFirstName("Amine"), HttpStatus.OK
-
-        );
-
-        /*
-        List<User> users;
-        if(firstName != null) {
-            logger.info("firstName");
-            users = userRepository.findByFirstName(firstName);
-            logger.info(users);
-        }
-        else if (lastName != null) {
-            logger.info("lastName");
-            users = userRepository.findByLastName(lastName);
-            logger.info(users);
-        }
-        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
 
     /*
-     * save a new user
-     *
-    @PostMapping(path="/add")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
+     * save a new object
+     */
+     ResponseEntity<DomainClass> saveObject(DomainClass object) {
 
         try {
-            userRepository.save(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            domainRepository.save(object);
+            return new ResponseEntity<>(object, HttpStatus.CREATED);
         }
         catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -92,39 +58,36 @@ public class GeneralController<DomainClass> {
     }
 
     /*
-     * update an existing user
-     *
-    @PutMapping(path="/update/{id}", consumes="application/json")
-    public ResponseEntity<User> updateUser(
-            @PathVariable(required=true) String id,
-            @RequestBody User newUser) {
+     * update an existing object
+     */
+    ResponseEntity<DomainClass> updateObject(String id, DomainClass object) {
 
-        Optional<User> result = userRepository.findById(id);
+        Optional<DomainClass> result = domainRepository.findById(new ObjectId(id));
 
         if(!result.isPresent()) {
-            logger.info("user with id id " + id + "does not exist");
+            logger.info("object with id id " + id + "does not exist");
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
-        newUser.setId(new ObjectId(id));
-        userRepository.save(newUser);
+        ((GeneralEntity)object).setId(new ObjectId(id));
 
-        return new ResponseEntity<>(newUser, HttpStatus.ACCEPTED);
+        domainRepository.save(object);
+
+        return new ResponseEntity<>(object, HttpStatus.ACCEPTED);
     }
 
     /*
-     * delete user
-     *
-    @DeleteMapping(path="/remove/{id}")
-    public ResponseEntity<User> removeUser(@PathVariable(required=true) String id) {
+     * delete object
+     */
+    ResponseEntity<DomainClass> removeObject(String id) {
 
-        Optional<User> result = userRepository.findById(id);
+        Optional<DomainClass> result = domainRepository.findById(new ObjectId(id));
         if(!result.isPresent()) {
-            logger.info("user with id id " + id + "does not exist");
+            logger.info("object with id id " + id + "does not exist");
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
-        userRepository.delete(result.get());
+        domainRepository.delete(result.get());
         return new ResponseEntity<>(result.get(), HttpStatus.ACCEPTED);
-    }*/
+    }
 
 }
