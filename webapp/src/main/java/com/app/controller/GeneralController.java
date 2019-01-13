@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.OptionalInt;
 
 
 // curl -X $m $a1$a2 -H $h -d $d
@@ -21,6 +21,17 @@ class GeneralController<DomainClass> {
     GeneralController(MongoRepository<DomainClass, ObjectId> domainRepository){
 
         this.domainRepository = domainRepository;
+    }
+
+    Optional<DomainClass> findById(String id){
+
+        ObjectId objectId;
+        try {objectId = new ObjectId(id);}
+        catch(IllegalArgumentException e) {
+            return Optional.empty();
+        }
+
+        return domainRepository.findById(objectId);
     }
 
     /*
@@ -37,7 +48,7 @@ class GeneralController<DomainClass> {
      */
     ResponseEntity<DomainClass> getById(String id){
 
-        Optional<DomainClass> result =  domainRepository.findById(new ObjectId(id));
+        Optional<DomainClass> result = findById(id);
         return result.map(object -> new ResponseEntity<>(object, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
@@ -62,10 +73,10 @@ class GeneralController<DomainClass> {
      */
     ResponseEntity<DomainClass> updateObject(String id, DomainClass object) {
 
-        Optional<DomainClass> result = domainRepository.findById(new ObjectId(id));
+        Optional<DomainClass> result = findById(id);
 
         if(!result.isPresent()) {
-            logger.info("object with id id " + id + "does not exist");
+            logger.info("object with id " + id + "does not exist");
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
@@ -81,7 +92,13 @@ class GeneralController<DomainClass> {
      */
     ResponseEntity<DomainClass> removeObject(String id) {
 
-        Optional<DomainClass> result = domainRepository.findById(new ObjectId(id));
+        ObjectId objectId;
+        try {objectId = new ObjectId(id);}
+        catch(IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Optional<DomainClass> result = findById(id);
         if(!result.isPresent()) {
             logger.info("object with id id " + id + "does not exist");
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);

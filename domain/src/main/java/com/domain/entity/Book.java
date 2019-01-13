@@ -22,7 +22,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "book")
-public class Book {
+public class Book implements GeneralEntity {
     @Id
     // @GeneratedValue(strategy= GenerationType.AUTO)
     private ObjectId id;
@@ -30,17 +30,23 @@ public class Book {
     private int year;
     private double price;
 
+
     @DBRef
     @CascadeSave
     private Set<Author> authors;
 
+
     // @DBRef
     // @CascadeSave
     // private Publisher publisher;
-
     private int quantity;
+
     // @ManyToMany(mappedBy = "booksCarts")
     // private List<Cart> carts ;
     // @ManyToMany(mappedBy = "orderBooks")
     // private List<Order> orders;
+
+    public void setId(ObjectId id){
+        this.id = id;
+    }
 }

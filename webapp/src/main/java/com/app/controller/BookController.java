@@ -1,19 +1,13 @@
 package com.app.controller;
 
-import com.domain.entity.User;
-import com.domain.repository.UserRepository;
 import org.apache.log4j.Logger;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import com.domain.entity.Book;
 import com.domain.repository.BookRepository;
 

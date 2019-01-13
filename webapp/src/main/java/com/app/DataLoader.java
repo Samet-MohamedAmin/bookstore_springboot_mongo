@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.domain.entity.*;
 import com.domain.repository.*;
 
-import com.shared.Mared;
 
 @Component
 public class DataLoader implements CommandLineRunner{
@@ -29,7 +28,6 @@ public class DataLoader implements CommandLineRunner{
     public void run(String... args) throws Exception {
         logger.info("hello");
 
-        Mared.printIt();
 
         /*
         User user = User.builder().firstName("User").lastName("Good").build();
