@@ -21,7 +21,7 @@ import com.domain.repository.BookRepository;
 @RestController
 @RequestMapping(path = "/api/books", produces = "application/json")
 class BookController {
-    final static Logger logger = Logger.getLogger(BookController.class);
+    static final Logger logger = Logger.getLogger(BookController.class);
     
     @Autowired
     BookRepository bookRepository;

@@ -21,9 +21,9 @@ public class DataLoader implements CommandLineRunner{
     BookRepository bookRepository;
 
     @Autowired
-    UserRepository UserRepository;
+    UserRepository userRepository;
     
-    final static Logger logger = Logger.getLogger(DataLoader.class);
+    static final Logger logger = Logger.getLogger(DataLoader.class);
 
     @Override
     public void run(String... args) throws Exception {

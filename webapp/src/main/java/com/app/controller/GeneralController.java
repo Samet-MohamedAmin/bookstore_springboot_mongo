@@ -1,52 +1,43 @@
 package com.app.controller;
 
-import com.domain.entity.Person;
+import com.domain.entity.User;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.domain.repository.UserRepository;
-import com.domain.entity.User;
 
 
 
-@RestController
-@RequestMapping(path = "/api/users", produces = "application/json")
-public class UserController {
+public class GeneralController<DomainClass> {
     private static final Logger logger = Logger.getLogger(UserController.class);
-    
-     @Autowired
-     private UserRepository userRepository;
+    // private final Class<?> domainClass;
 
-     GeneralController generalController;
+    private MongoRepository<DomainClass, ObjectId> repo;
 
-     private UserController() {
+    GeneralController(MongoRepository<DomainClass, ObjectId> repository){
 
-         this.generalController = new GeneralController<User>(userRepository);
-     }
+        this.repo = repository;
+        // this.domainClass = domainClass;
+    }
 
 
-     /*
-      * get all users
-      */
-     @GetMapping(path="")
-     public ResponseEntity<List<User>> getAllUsers() {
-         return generalController.getAll();
-         /*
-         List<User> users = userRepository.findAll();
-         return new ResponseEntity<>(users, HttpStatus.OK);
-         */
-     }
+    /*
+     * get all objects
+     */
+    public ResponseEntity<List<DomainClass>> getAll() {
+
+        List<DomainClass> objects = repo.findAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     /*
      * get user accroding to id
-     */
+     *
     @GetMapping(path="/get/{id}")
     public ResponseEntity<User> getUserById(@PathVariable(required=true) String id){
 
@@ -57,11 +48,11 @@ public class UserController {
 
     /*
      * get all users according to firstName
-     */
+     *
     @GetMapping(path="/get")
     public ResponseEntity<List<User>> getUsersByAttribute(
-        @RequestParam(required=false) String firstName,
-        @RequestParam(required=false) String lastName) {
+            @RequestParam(required=false) String firstName,
+            @RequestParam(required=false) String lastName) {
 
         return new ResponseEntity<>(userRepository.findByFirstName("Amine"), HttpStatus.OK
 
@@ -81,13 +72,13 @@ public class UserController {
         }
         else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(users, HttpStatus.OK);*/
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 
     /*
      * save a new user
-     */
+     *
     @PostMapping(path="/add")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
 
@@ -102,17 +93,17 @@ public class UserController {
 
     /*
      * update an existing user
-     */
+     *
     @PutMapping(path="/update/{id}", consumes="application/json")
     public ResponseEntity<User> updateUser(
-        @PathVariable(required=true) String id,
-        @RequestBody User newUser) {
-        
+            @PathVariable(required=true) String id,
+            @RequestBody User newUser) {
+
         Optional<User> result = userRepository.findById(id);
 
         if(!result.isPresent()) {
-           logger.info("user with id id " + id + "does not exist");
-           return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            logger.info("user with id id " + id + "does not exist");
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
         newUser.setId(new ObjectId(id));
@@ -123,7 +114,7 @@ public class UserController {
 
     /*
      * delete user
-     */
+     *
     @DeleteMapping(path="/remove/{id}")
     public ResponseEntity<User> removeUser(@PathVariable(required=true) String id) {
 
@@ -134,6 +125,6 @@ public class UserController {
         }
         userRepository.delete(result.get());
         return new ResponseEntity<>(result.get(), HttpStatus.ACCEPTED);
-    }
+    }*/
 
 }
