@@ -4,11 +4,16 @@
 
 ## TODO
 - [ ] security part
-- [ ] promotion
-    - [ ] promotion validation
-    - [ ] autoremove invalid promotions
+- [x] discount
+    - [x] discount validation
+    - [x] autoremove invalid discounts
 - [ ] book
-    - [ ] add books actual price
+    - [x] add books actual price
     - [ ] treat the case when the quantity is 0
+- [ ] order
+    - [x] api to add or remove books
+    - [ ] validating order
+- [ ] user
+    - [ ] user create orders
 
     

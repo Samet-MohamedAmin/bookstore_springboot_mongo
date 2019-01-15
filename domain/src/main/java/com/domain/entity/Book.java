@@ -1,16 +1,15 @@
 package com.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shared.annotation.CascadeSave;
 
 import java.util.Set;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -26,11 +25,14 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 @CompoundIndexes({ @CompoundIndex(name = "name_year", def = "{'name' : 1, 'year': 1}") })
 public class Book implements GeneralEntity {
     @Id
+    @EqualsAndHashCode.Include
     private String id;
+    @EqualsAndHashCode.Include
     private String name;
+    @EqualsAndHashCode.Include
     private int year;
-    private double price;
     private int quantity;
+    private double price;
 
     @DBRef
     @CascadeSave
@@ -42,12 +44,14 @@ public class Book implements GeneralEntity {
 
     @DBRef
     @CascadeSave
-    private Promotion promotion;
+    private Discount discount;
 
     public void setId(String id){ this.id = id; }
 
+    @Transient
+    @JsonIgnore
     public double getActualPrice() {
 
-        return price * promotion.getPercentage();
+        return discount.isActive() ? price * (1 - discount.getPercentage()) : price;
     }
 }

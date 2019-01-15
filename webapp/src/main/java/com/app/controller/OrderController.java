@@ -1,13 +1,16 @@
 package com.app.controller;
 
+import com.domain.entity.Book;
 import com.domain.entity.Order;
 import com.domain.repository.OrderRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -89,6 +92,45 @@ public class OrderController {
 
         return generalController.updateObject(id, order);
     }
+
+
+    /*
+     * add books to order
+     */
+    @PutMapping(path="/update/{id}/validate_shippement", consumes="application/json")
+    public ResponseEntity<Order> addBooks(@PathVariable(required=true) String id) {
+
+        Optional<Order> result = generalController.findById(id);
+
+        return result.map(obj -> {obj.setShipped(true);
+                                 return new ResponseEntity<>(obj, HttpStatus.ACCEPTED);})
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE));
+    }
+
+
+    /*
+     * remove books from order
+     */
+    @PutMapping(path="/update/{id}/book_list/remove", consumes="application/json")
+    public ResponseEntity<List<Book>> removeBooks(
+            @PathVariable(required=true) String id,
+            @RequestBody  BookList BookListToRemove) {
+
+        List<Book> booksToRemove = BookListToRemove.getBookList();
+
+        Optional<Order> result = generalController.findById(id);
+
+        if(!result.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<Book> bookList = result.get().getBookList();
+        bookList.removeAll(booksToRemove);
+        result.get().setBookList(bookList);
+        orderRepository.save(result.get());
+        return new ResponseEntity<>(bookList, HttpStatus.OK);
+    }
+
 
     /*
      * delete order

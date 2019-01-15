@@ -1,11 +1,16 @@
 package com.app.controller;
 
+import com.domain.entity.Book;
+import com.domain.entity.Cart;
+import com.domain.entity.Order;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
+
 import com.domain.repository.UserRepository;
 import com.domain.entity.User;
 
@@ -88,6 +93,18 @@ public class UserController {
             @RequestBody User user) {
 
         return generalController.updateObject(id, user);
+    }
+
+    /*
+     * remove books from cart
+     */
+    @PutMapping(path="/update/{id}/validate_order", consumes="application/json")
+    public ResponseEntity<Order> removeBooks(@PathVariable(required=true) String id) {
+
+        Optional<User> result = generalController.findById(id);
+
+        return result.map(obj -> new ResponseEntity<>(obj.validateOrder(), HttpStatus.ACCEPTED))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE));
     }
 
     /*

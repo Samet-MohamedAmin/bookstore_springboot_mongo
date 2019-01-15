@@ -67,6 +67,7 @@ class GeneralController<DomainClass> {
 
         try {
             domainRepository.save(object);
+            logger.info("successfully created");
             return new ResponseEntity<>(object, HttpStatus.CREATED);
         }
         catch (DuplicateKeyException e) {

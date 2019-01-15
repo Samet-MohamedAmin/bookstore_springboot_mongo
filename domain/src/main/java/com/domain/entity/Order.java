@@ -1,16 +1,14 @@
 package com.domain.entity;
 
 import com.shared.annotation.CascadeSave;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -19,18 +17,25 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "order")
+@Component
 public class Order implements GeneralEntity {
 
     @Id
     private String id;
-    private double totalPrice;
 
     @DBRef
     private User user;
 
     @DBRef
     @CascadeSave
-    private List<Book> booksCarts;
+    private List<Book> bookList;
+
+    @DBRef
+    LocalDateTime startDate = LocalDateTime.now();
+
+    private double totalPrice;
+
+    private boolean shipped = false;
 
     public void setId(String id){ this.id = id; }
 }

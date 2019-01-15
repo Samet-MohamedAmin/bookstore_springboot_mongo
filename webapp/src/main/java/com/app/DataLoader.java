@@ -1,33 +1,68 @@
 package com.app;
 
 
+import com.domain.entity.Order;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
-import com.domain.entity.*;
 import com.domain.repository.*;
+
 
 
 @Component
 public class DataLoader implements CommandLineRunner{
-
-    @Autowired
-    AuthorRepository authorRepository;
-
-    @Autowired
-    BookRepository bookRepository;
-
-    @Autowired
-    UserRepository userRepository;
     
-    static final Logger logger = Logger.getLogger(DataLoader.class);
+    private static final Logger logger = Logger.getLogger(DataLoader.class);
+
+
+    @Autowired
+    MongoTemplate mongoTemplate;
+
+    @Autowired
+    DiscountRepository discountRepository;
 
     @Override
     public void run(String... args) throws Exception {
         logger.info("hello");
 
+        // mongoTemplate.getDb().drop();
+
+        //LocalDate dateStart = LocalDate.of(2019, Month.JANUARY, 10);
+
+
+        /*
+        LocalDate dateEnd_1 = LocalDate.of(2019, Month.JANUARY, 10);
+        LocalDate dateEnd_2 = LocalDate.of(2019, Month.JANUARY, 12);
+        LocalDate dateEnd_3 = LocalDate.of(2019, Month.JANUARY, 16);
+        LocalDate dateEnd_4 = LocalDate.of(2019, Month.JANUARY, 20);
+
+
+        Discount discount_1 = Discount.builder()
+                                        .dateEnd(dateEnd_1)
+                                        .build();
+
+        Discount discount_2 = Discount.builder()
+                                        .dateEnd(dateEnd_2)
+                                        .build();
+
+        Discount discount_3 = Discount.builder()
+                                        .dateEnd(dateEnd_3)
+                                        .build();
+
+
+        Discount discount_4 = Discount.builder()
+                                        .dateEnd(dateEnd_4)
+                                        .build();
+
+
+        discountRepository.save(discount_1);
+        discountRepository.save(discount_2);
+        discountRepository.save(discount_3);
+        discountRepository.save(discount_4);
+        */
 
         /*
         User user = User.builder().firstName("User").lastName("Good").build();
