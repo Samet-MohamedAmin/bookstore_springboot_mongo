@@ -5,33 +5,22 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Service;
 
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@Document(collection = "person")
-@Service
 public class Person implements GeneralEntity {
 
-    // public Person(String firstName, String lastName) {
-    //     this.firstName = firstName;
-    //     this.lastName = lastName;
-    // }
-
     @Id
-    // @NonNull
-    //@GeneratedValue(strategy= GenerationType.AUTO)
-    ObjectId id;
+    String id;
+    @Indexed(unique=true)
+    String email;
     String firstName;
     String lastName;
 
-    public void setId(ObjectId id){
-        this.id = id;
-    }
-    
-    // public String getFullName(){
-    //     return this.getFirstName() + " " + this.getLastName();
-    // }
+    public void setId(String id){ this.id = id; }
 }

@@ -35,14 +35,14 @@ class BookController {
     /*
      * get all books
      */
-    @GetMapping(path="/get/all")
+    @GetMapping(path="")
     public ResponseEntity<List<Book>> getAllBooks() {
 
         return generalController.getAll();
     }
 
     /*
-     * get book accroding to id
+     * get book according to id
      */
     @GetMapping(path="/get/{id}")
     public ResponseEntity<List<Book>> getBookById(@PathVariable(required=true) String id){

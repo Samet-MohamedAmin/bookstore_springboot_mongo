@@ -10,8 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
@@ -22,31 +23,31 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "book")
+@CompoundIndexes({ @CompoundIndex(name = "name_year", def = "{'name' : 1, 'year': 1}") })
 public class Book implements GeneralEntity {
     @Id
-    // @GeneratedValue(strategy= GenerationType.AUTO)
-    private ObjectId id;
+    private String id;
     private String name;
     private int year;
     private double price;
-
+    private int quantity;
 
     @DBRef
     @CascadeSave
-    private Set<Author> authors;
+    private Set<Author> author;
 
+    @DBRef
+    @CascadeSave
+    private Publisher publisher;
 
-    // @DBRef
-    // @CascadeSave
-    // private Publisher publisher;
-    private int quantity;
+    @DBRef
+    @CascadeSave
+    private Promotion promotion;
 
-    // @ManyToMany(mappedBy = "booksCarts")
-    // private List<Cart> carts ;
-    // @ManyToMany(mappedBy = "orderBooks")
-    // private List<Order> orders;
+    public void setId(String id){ this.id = id; }
 
-    public void setId(ObjectId id){
-        this.id = id;
+    public double getActualPrice() {
+
+        return price * promotion.getPercentage();
     }
 }

@@ -1,5 +1,6 @@
 package com.domain.entity;
 
+import com.shared.annotation.CascadeSave;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +8,10 @@ import lombok.NoArgsConstructor;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 
 @Data
@@ -18,16 +22,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Cart implements GeneralEntity {
 
     @Id
-    // @GeneratedValue(strategy= GenerationType.AUTO)
-    private ObjectId id;
+    private String id;
+    private double totalPrice;
 
-    public void setId(ObjectId id){
-        this.id = id;
-    }
+    @DBRef
+    private User user;
 
-    // @OneToOne(cascade = CascadeType.ALL)
-    // private User user;
-    // private float totalPrice;
-    // @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    // private List<Book> booksCarts;
+    @DBRef
+    @CascadeSave
+    private List<Book> booksCarts;
+
+    public void setId(String id){ this.id = id; }
 }

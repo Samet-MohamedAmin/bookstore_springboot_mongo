@@ -1,8 +1,11 @@
 package com.app.controller;
 
 import com.domain.entity.GeneralEntity;
+import com.mongodb.MongoWriteException;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.mongodb.core.schema.MongoJsonSchema;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +42,11 @@ class GeneralController<DomainClass> {
      */
     ResponseEntity<List<DomainClass>> getAll() {
 
-        List<DomainClass> objects = domainRepository.findAll();
-        return new ResponseEntity<>(objects, HttpStatus.OK);
+        List<DomainClass> listObjects = domainRepository.findAll();
+        if(listObjects.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(listObjects, HttpStatus.OK);
     }
 
     /*
@@ -57,15 +63,19 @@ class GeneralController<DomainClass> {
     /*
      * save a new object
      */
-     ResponseEntity<DomainClass> saveObject(DomainClass object) {
+    ResponseEntity<DomainClass> saveObject(DomainClass object) {
 
         try {
             domainRepository.save(object);
             return new ResponseEntity<>(object, HttpStatus.CREATED);
         }
-        catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        catch (DuplicateKeyException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+        //catch (Exception e) {
+        //    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        //}
     }
 
     /*
@@ -80,7 +90,7 @@ class GeneralController<DomainClass> {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
-        ((GeneralEntity)object).setId(new ObjectId(id));
+        ((GeneralEntity)object).setId(id);
 
         domainRepository.save(object);
 
