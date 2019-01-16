@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,11 +25,9 @@ public class Cart implements GeneralEntity {
     private String id;
 
     @DBRef
-    private User user;
-
-    @DBRef
     @CascadeSave
-    private List<Book> bookList;
+    @Builder.Default
+    private List<Book> bookList = new ArrayList<Book>();
 
     public void setId(String id){ this.id = id; }
 

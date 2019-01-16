@@ -2,10 +2,14 @@ package com.app.controller;
 
 import com.domain.entity.Book;
 import com.domain.entity.Cart;
+import com.domain.repository.BookRepository;
 import com.domain.repository.CartRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.ToString;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,9 @@ public class CartController {
     private CartRepository cartRepository;
 
     GeneralController generalController;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
     private CartController(CartRepository cartRepository) {
@@ -102,9 +109,7 @@ public class CartController {
     @PutMapping(path="/update/{id}/book_list/add", consumes="application/json")
     public ResponseEntity<List<Book>> addBooks(
             @PathVariable(required=true) String id,
-            @RequestBody  BookList BookListToAdd) {
-
-        List<Book> booksToAdd = BookListToAdd.getBookList();
+            @RequestBody  BookList bookListToAdd) {
 
         Optional<Cart> result = generalController.findById(id);
 
@@ -113,7 +118,7 @@ public class CartController {
         }
 
         List<Book> bookList = result.get().getBookList();
-        bookList.addAll(booksToAdd);
+        bookList.addAll(bookListToAdd.getBookList());
         cartRepository.save(result.get());
         return new ResponseEntity<>(bookList, HttpStatus.ACCEPTED);
     }
@@ -128,6 +133,8 @@ public class CartController {
             @RequestBody  BookList BookListToRemove) {
 
         List<Book> booksToRemove = BookListToRemove.getBookList();
+
+        logger.info(booksToRemove);
 
         Optional<Cart> result = generalController.findById(id);
 
@@ -154,10 +161,10 @@ public class CartController {
 
 }
 
+@Document
 @ToString
+@Getter
 class BookList {
 
     private List<Book> bookList;
-
-    List<Book> getBookList() { return bookList; }
 }

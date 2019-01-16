@@ -1,7 +1,9 @@
 package com.app;
 
 
+import com.domain.entity.Cart;
 import com.domain.entity.Order;
+import com.domain.entity.User;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,11 +26,19 @@ public class DataLoader implements CommandLineRunner{
     @Autowired
     DiscountRepository discountRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    CartRepository cartRepository;
+
     @Override
     public void run(String... args) throws Exception {
         logger.info("hello");
 
+        // clear database when starting the app
         // mongoTemplate.getDb().drop();
+
 
         //LocalDate dateStart = LocalDate.of(2019, Month.JANUARY, 10);
 

@@ -24,9 +24,6 @@ public class Order implements GeneralEntity {
     private String id;
 
     @DBRef
-    private User user;
-
-    @DBRef
     @CascadeSave
     private List<Book> bookList;
 

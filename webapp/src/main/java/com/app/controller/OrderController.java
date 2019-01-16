@@ -95,9 +95,9 @@ public class OrderController {
 
 
     /*
-     * add books to order
+     * validate shipment
      */
-    @PutMapping(path="/update/{id}/validate_shippement", consumes="application/json")
+    @PutMapping(path="/update/{id}/validate_shipment", consumes="application/json")
     public ResponseEntity<Order> addBooks(@PathVariable(required=true) String id) {
 
         Optional<Order> result = generalController.findById(id);

@@ -13,11 +13,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class Person implements GeneralEntity {
+public class Person  implements GeneralEntity {
 
     @Id
     String id;
-    @Indexed(unique=true)
+    // @Indexed(unique=true)
     String email;
     String firstName;
     String lastName;

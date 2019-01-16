@@ -22,10 +22,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "book")
-@CompoundIndexes({ @CompoundIndex(name = "name_year", def = "{'name' : 1, 'year': 1}") })
+// @CompoundIndexes({ @CompoundIndex(name = "name_year", def = "{'name' : 1, 'year': 1}") })
 public class Book implements GeneralEntity {
     @Id
-    @EqualsAndHashCode.Include
     private String id;
     @EqualsAndHashCode.Include
     private String name;
@@ -36,7 +35,7 @@ public class Book implements GeneralEntity {
 
     @DBRef
     @CascadeSave
-    private Set<Author> author;
+    private Set<Author> authorList;
 
     @DBRef
     @CascadeSave
@@ -52,6 +51,6 @@ public class Book implements GeneralEntity {
     @JsonIgnore
     public double getActualPrice() {
 
-        return discount.isActive() ? price * (1 - discount.getPercentage()) : price;
+        return discount !=null && discount.isActive() ? price * (1 - discount.getPercentage()) : price;
     }
 }

@@ -4,15 +4,19 @@
 
 ## TODO
 - [ ] security part
-- [x] discount
+- [ ] discount
     - [x] discount validation
     - [x] autoremove invalid discounts
+    - [ ] test discount
 - [ ] book
     - [x] add books actual price
     - [ ] treat the case when the quantity is 0
-- [ ] order
+- [ ] cart
     - [x] api to add or remove books
-    - [ ] validating order
+    - [x] validating order
+    - [ ] command multiple books (map)
+- [x] order
+    - [x] validate shipment
 - [ ] user
     - [ ] user create orders
 

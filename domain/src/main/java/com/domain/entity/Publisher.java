@@ -29,7 +29,7 @@ public class Publisher implements GeneralEntity {
 
     @Id
     private String id;
-    @Indexed(unique=true)
+    // @Indexed(unique=true)
     private String name;
     private String picture;
 
