@@ -21,6 +21,4 @@ public class Person  implements GeneralEntity {
     String email;
     String firstName;
     String lastName;
-
-    public void setId(String id){ this.id = id; }
 }

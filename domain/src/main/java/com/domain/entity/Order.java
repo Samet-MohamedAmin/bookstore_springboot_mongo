@@ -31,6 +31,4 @@ public class Order implements GeneralEntity {
     private double totalPrice;
 
     private boolean shipped = false;
-
-    public void setId(String id){ this.id = id; }
 }

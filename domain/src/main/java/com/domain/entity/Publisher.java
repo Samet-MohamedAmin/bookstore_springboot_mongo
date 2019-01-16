@@ -32,6 +32,4 @@ public class Publisher implements GeneralEntity {
     // @Indexed(unique=true)
     private String name;
     private String picture;
-
-    public void setId(String id){ this.id = id; }
 }

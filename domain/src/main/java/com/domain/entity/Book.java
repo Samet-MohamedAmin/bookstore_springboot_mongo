@@ -45,8 +45,6 @@ public class Book implements GeneralEntity {
     @CascadeSave
     private Discount discount;
 
-    public void setId(String id){ this.id = id; }
-
     @Transient
     @JsonIgnore
     double getActualPrice() {

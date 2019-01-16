@@ -9,7 +9,7 @@ To easily view and test the api, you can use swagger ui
 
 ## TODO
 - [ ] security part
-- [ ] query only single object not multiple
+- [x] query only single object not multiple (lazy loading)
 - [ ] discount
     - [x] discount validation
     - [x] autoremove invalid discounts

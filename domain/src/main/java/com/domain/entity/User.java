@@ -46,7 +46,7 @@ public class User extends Person {
     public String toString() { return super.toString(); }
 
     @JsonIgnore
-    private static final Logger logger = Logger.getLogger(Cart.class);
+    private static final Logger logger = Logger.getLogger(User.class);
 
     @JsonIgnore
     public Optional<Order> validateOrder(){
@@ -54,7 +54,6 @@ public class User extends Person {
         logger.info("validate order");
 
         Order order = null;
-        logger.info(cart.isAllBooksPresent());
         logger.info("total price: " + cart.getTotalPrice());
         if(cart.isAllBooksPresent() && cart.getTotalPrice() <= budget) {
 

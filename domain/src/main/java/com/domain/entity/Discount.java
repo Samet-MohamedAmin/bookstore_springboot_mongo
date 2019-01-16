@@ -16,15 +16,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "discount")
-public class Discount { //implements GeneralEntity {
+public class Discount implements GeneralEntity {
     @Id
     private String id;
     private double percentage;
     private LocalDate dateStart;
     private LocalDate dateEnd;
-
-
-    public void setId(String id){ this.id = id; }
 
     /*
      * verify if the combination of dateStart and dateEnd is valid

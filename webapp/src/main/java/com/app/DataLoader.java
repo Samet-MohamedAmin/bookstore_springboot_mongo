@@ -50,8 +50,9 @@ public class DataLoader implements CommandLineRunner{
         // clear database when starting the app
         // mongoTemplate.getDb().drop();
 
+        Cart cart = cartRepository.findAll().get(0);
 
-
+        logger.info(cart);
 
         //LocalDate dateStart = LocalDate.of(2019, Month.JANUARY, 10);
 

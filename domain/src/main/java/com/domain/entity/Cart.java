@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shared.annotation.CascadeSave;
 import lombok.*;
 
-import org.apache.log4j.Logger;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -29,8 +28,6 @@ public class Cart implements GeneralEntity {
     @CascadeSave
     @Builder.Default
     private List<Book> bookList = new ArrayList<>();
-
-    public void setId(String id){ this.id = id; }
 
     @JsonIgnore
     final double getTotalPrice(){
