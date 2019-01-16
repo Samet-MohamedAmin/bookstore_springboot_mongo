@@ -2,6 +2,11 @@
 
 ## Content
 
+## Swagger UI
+To easily view and test the api, you can use swagger ui
+[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+
 ## TODO
 - [ ] security part
 - [ ] discount
