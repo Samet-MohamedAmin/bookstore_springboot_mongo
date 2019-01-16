@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shared.annotation.CascadeSave;
 import lombok.*;
 
+import org.apache.log4j.Logger;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,16 +28,24 @@ public class Cart implements GeneralEntity {
     @DBRef
     @CascadeSave
     @Builder.Default
-    private List<Book> bookList = new ArrayList<Book>();
+    private List<Book> bookList = new ArrayList<>();
 
     public void setId(String id){ this.id = id; }
 
     @JsonIgnore
-    public final double getTotalPrice(){
+    final double getTotalPrice(){
 
         return bookList.stream()
                 .reduce(0d,
                         (sum, book) -> sum += book.getActualPrice(),
                         (sum1, sum2) -> sum1 + sum2);
+    }
+
+    @JsonIgnore
+    boolean isAllBooksPresent(){
+
+        for (Book book: bookList)
+            if(book.getQuantity() == 0) return false;
+        return true;
     }
 }

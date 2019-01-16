@@ -9,20 +9,21 @@ To easily view and test the api, you can use swagger ui
 
 ## TODO
 - [ ] security part
+- [ ] query only single object not multiple
 - [ ] discount
     - [x] discount validation
     - [x] autoremove invalid discounts
     - [ ] test discount
-- [ ] book
+- [x] book
     - [x] add books actual price
-    - [ ] treat the case when the quantity is 0
+    - [x] treat the case when the quantity is 0
 - [ ] cart
     - [x] api to add or remove books
     - [x] validating order
     - [ ] command multiple books (map)
 - [x] order
     - [x] validate shipment
-- [ ] user
-    - [ ] user create orders
+- [x] user
+    - [x] user create orders
 
     

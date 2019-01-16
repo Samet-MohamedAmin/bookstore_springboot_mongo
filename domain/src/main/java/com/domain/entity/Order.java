@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "order")
-@Component
 public class Order implements GeneralEntity {
 
     @Id
@@ -27,7 +26,6 @@ public class Order implements GeneralEntity {
     @CascadeSave
     private List<Book> bookList;
 
-    @DBRef
     LocalDateTime startDate = LocalDateTime.now();
 
     private double totalPrice;

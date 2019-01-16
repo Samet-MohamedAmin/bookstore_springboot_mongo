@@ -102,9 +102,14 @@ public class OrderController {
 
         Optional<Order> result = generalController.findById(id);
 
-        return result.map(obj -> {obj.setShipped(true);
-                                 return new ResponseEntity<>(obj, HttpStatus.ACCEPTED);})
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE));
+        if(!result.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+
+        Order order = result.get();
+        order.setShipped(true);
+        orderRepository.save(order);
+
+        return new ResponseEntity<>(order, HttpStatus.ACCEPTED);
     }
 
 

@@ -49,7 +49,7 @@ public class Book implements GeneralEntity {
 
     @Transient
     @JsonIgnore
-    public double getActualPrice() {
+    double getActualPrice() {
 
         return discount !=null && discount.isActive() ? price * (1 - discount.getPercentage()) : price;
     }

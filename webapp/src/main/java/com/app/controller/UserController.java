@@ -88,14 +88,14 @@ public class UserController {
 
     /*
      * save a new user
-     */
+     *
     @PostMapping(path="/add")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
 
         user.setCart(cartRepository.save(Cart.builder().build()));
 
         return generalController.saveObject(user);
-    }
+    }*/
 
     /*
      * update an existing user
@@ -111,23 +111,26 @@ public class UserController {
     /*
      * validate order (cart -> order)
      */
-    @PutMapping(path="/update/{id}/validate_order", consumes="application/json")
-    public ResponseEntity<Order> removeBooks(@PathVariable(required=true) String id) {
-
-        Optional<User> resultUser = generalController.findById(id);
-
-        // TODO: should return NOT_ACCEPTED when budget < totalPrice
-
-        if(!resultUser.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+    @PutMapping(path="/update/{userId}/validate_order", consumes="application/json")
+    public ResponseEntity<Order> validateOrder(
+            @PathVariable(required=true) String userId) {
+        logger.info("validateOrder");
+        logger.info(userId);
+        Optional<User> resultUser = generalController.findById(userId);
+        logger.info(resultUser.isPresent());
+        if(resultUser.isPresent()) {
+            logger.info("user is present");
+            Optional<Order> resultOrder = resultUser.get().validateOrder();
+            if(resultOrder.isPresent()) {
+                logger.info("order validated");
+                // orderRepository.save(resultOrder.get());
+                // cartRepository.save(resultUser.get().getCart());
+                userRepository.save(resultUser.get());
+                return new ResponseEntity<>(resultOrder.get(), HttpStatus.ACCEPTED);
+            }
         }
-        Optional<Order> resultOrder = resultUser.get().validateOrder();
-        if(!resultOrder.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-        orderRepository.save(resultOrder.get());
-        userRepository.save(resultUser.get());
-        return new ResponseEntity<>(resultOrder.get(), HttpStatus.ACCEPTED);
+
+        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     /*

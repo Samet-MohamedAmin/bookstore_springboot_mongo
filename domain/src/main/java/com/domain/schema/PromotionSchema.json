@@ -1,4 +1,0 @@
-{
-  "bla": {"type": "integer", "default": "0", "unique": true},
-  "percentage": {"type": "float"}
-}

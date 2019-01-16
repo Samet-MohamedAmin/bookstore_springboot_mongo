@@ -1,17 +1,22 @@
 package com.app;
 
 
-import com.domain.entity.Cart;
-import com.domain.entity.Order;
-import com.domain.entity.User;
+import com.domain.entity.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.domain.repository.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Component
@@ -32,6 +37,12 @@ public class DataLoader implements CommandLineRunner{
     @Autowired
     CartRepository cartRepository;
 
+    @Autowired
+    BookRepository bookRepository;
+
+    @Autowired
+    AuthorRepository authorRepository;
+
     @Override
     public void run(String... args) throws Exception {
         logger.info("hello");
@@ -40,8 +51,9 @@ public class DataLoader implements CommandLineRunner{
         // mongoTemplate.getDb().drop();
 
 
-        //LocalDate dateStart = LocalDate.of(2019, Month.JANUARY, 10);
 
+
+        //LocalDate dateStart = LocalDate.of(2019, Month.JANUARY, 10);
 
         /*
         LocalDate dateEnd_1 = LocalDate.of(2019, Month.JANUARY, 10);
